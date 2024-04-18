@@ -39,3 +39,32 @@ resource "oci_core_instance" "instance" {
   preserve_boot_volume = each.value["preserve_boot_volume"]
 }
 
+
+resource "oci_core_volume" "volume" {
+  
+  for_each = var.oci_volumes
+  
+  compartment_id = each.value["compartment_id"]
+  availability_domain = each.value["availability_domain"]
+  display_name = each.value["display_name"]
+  size_in_gbs = each.value["size_in_gbs"]
+  vpus_per_gb = each.value["vpus_per_gb"]
+
+  is_auto_tune_enabled = each.value["is_auto_tune_enabled"]
+  
+  autotune_policies {
+    autotune_type = each.value.autotune_policies.autotune_type
+    max_vpus_per_gb = each.value.autotune_policies.max_vpus_per_gb
+  }
+
+}
+
+resource "oci_core_volume_attachment" "volume_attachment" {
+  
+  for_each = var.oci_volumes
+
+  attachment_type = each.value["attachment_type"]
+  instance_id = oci_core_instance.instance[each.value.instance_to_attach].id
+  volume_id = oci_core_volume.volume[each.key].id
+  
+}
