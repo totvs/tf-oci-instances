@@ -31,6 +31,10 @@ resource "oci_core_instance" "instance" {
       compartment_id = each.value.source_details.instance_source_image_filter_details.compartment_id
     }
   }
+
+  launch_options = {
+      network_type = each.value.launch_options.network_type
+  }
   
   metadata = {
     ssh_authorized_keys = each.value.metadata.ssh_authorized_keys
