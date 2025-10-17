@@ -11,6 +11,7 @@ resource "oci_core_instance" "instance" {
     nsg_ids = each.value.create_vnic_details.nsg_ids
     subnet_id = each.value.create_vnic_details.subnet_id
     assign_public_ip = each.value.create_vnic_details.assign_public_ip
+    network_type = each.value.create_vnic_details.network_type
   }
 
   display_name = each.value["display_name"]
@@ -31,11 +32,7 @@ resource "oci_core_instance" "instance" {
       compartment_id = each.value.source_details.instance_source_image_filter_details.compartment_id
     }
   }
-
-  launch_options = {
-      network_type = each.value.launch_options.network_type
-  }
-  
+ 
   metadata = {
     ssh_authorized_keys = each.value.metadata.ssh_authorized_keys
   } 
