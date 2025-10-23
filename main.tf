@@ -36,9 +36,7 @@ resource "oci_core_instance" "instance" {
     network_type = each.value.launch_options.network_type
   }
  
-  metadata = {
-    ssh_authorized_keys = each.value.metadata.ssh_authorized_keys
-  } 
+  metadata = length(keys(each.value.metadata)) > 0 ? each.value.metadata : {} 
   
   preserve_boot_volume = each.value["preserve_boot_volume"]
 }
